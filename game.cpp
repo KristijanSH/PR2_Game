@@ -23,8 +23,10 @@ public:
 		return name;	//ili je return this->name; ? posto pise liefert den namen des this-objekts?
 	}
 	bool Game::is_allowed(int n) const {		// poseri mi se u usta ako ovo bude radilo
-		double hostMMR = host->mmr;
-		if(((hostMMR / 100) / n) > 0.9 || ((hostMMR / 100) / n) < 1.1){
+		//double hostMMR = host->mmr;
+		auto 90perc = mmr * 90 / 100;	//alt 1
+		auto 110perc = mmr * 110 / 100;	//alt 1
+		if( n > mmr * 0.90 || n < mmr * 1.10){		//alt 1:	if(n > 90perc || n < 110perc)	//alt 2: sa float if( n > mmr * 9.0/10 || n < mmr * 11.0/10) 
 			return true;
 		} else
 			return false;
