@@ -44,8 +44,21 @@ public:
 		  }
 		return checkDelete;  
 	}
-	bool add_player(const GameKey& gk, shared_ptr<Player> p);	//TODO!	
-	shared_ptr<Player> best_player() const;						//TODO!
+	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p);	//TODO!	
+	
+	shared_ptr<Player> best_player() const{
+		shared_ptr<Player> mwp;
+		if(players.empty()) throw new runtime_error("Players empty!");
+		else {
+			mwp = *max_element(players.begin(), players.end(), [=](auto p1, auto p2) {
+				return p1.get_mmr() < p2.get_mmr();
+			});
+		
+		return mwp;
+		}
+		if(players.count() > 1)
+			return players.first;
+	}						
 	size_t number_of_players() const{
 	size_t PlayerCounter = 0;
     for(auto i : players){
