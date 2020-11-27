@@ -45,7 +45,7 @@ public:
 		return checkDelete;  
 	}
 	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p);	//TODO!	
-	
+
 	shared_ptr<Player> best_player() const{
 		shared_ptr<Player> mwp;
 		if(players.empty()) throw new runtime_error("Players empty!");
@@ -68,7 +68,7 @@ public:
     }
     return PlayerCounter;
 	}
-	shared_ptr<Player> play(size_t i);
+	shared_ptr<Player> play(size_t i);	//TODO
 	virtual int change(bool) const = 0;
 	virtual ~Game() = default;
 

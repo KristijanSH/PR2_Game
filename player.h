@@ -19,9 +19,16 @@ class Player:public enable_shared_from_this<Player>{	//HINWEIS: Um shared_pointe
 	shared_ptr<Game> hosted_game;
 	map<string, weak_ptr<Game>> games; //Map von Spielen an denen Player teilnimmt
 public:
-	Player(string name, int mmr);
-	string get_name() const
-	int get_mmr() const;
+	Player(string name, int mmr) : name{name}, mmr{mmr} {
+		if(name.size == 0) {throw runtime_error("Empty name");}
+		if(mmr < 0 || mmr > 9999) {throw runtime_error("MMR < 0 or > 9999!");}
+	}
+	string get_name() const {
+		return name;
+	}
+	int get_mmr() const{
+		return mmr;
+	}
 	shared_ptr<Game> get_hosted_game() const;
 	void change_mmr(int n);
 	bool host_game(string s, Mode m);
