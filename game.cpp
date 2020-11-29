@@ -44,7 +44,13 @@ public:
 		  }
 		return checkDelete;  
 	}
-	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p);	//TODO!	
+	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p) {
+		if((Player::get_name() != p.get_name()) && ((p.get_mmr() < host.get_mmr() * 0.10 ) || (p.get_mmr() > host.get_mmr() * 0.10 ))) {
+			players.insert({p->get_name(), p});
+			return true;
+		} else
+			return false;
+	}
 
 	shared_ptr<Player> best_player() const{
 		shared_ptr<Player> mwp;
