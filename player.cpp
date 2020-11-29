@@ -26,13 +26,13 @@ public:
 	shared_ptr<Game> get_hosted_game() const{
 		return shared_ptr<Game>
 	}
-	void change_mmr(int n){
+	void Player::change_mmr(int n){
 		if(mmr < 0 || mmr > 9999) {
 			return mmr;
 		} else
 			return mmr + n;
 	}
-	bool host_game(string s, Mode m) {
+	bool Player::host_game(string s, Mode m) {
 		if(s.empty()) throw new runtime_error("empty string!");
 		if(hosted_game == nullptr) {	//labavo je ovo kume al mozda proradi
 			m->hosted_game;
@@ -40,11 +40,13 @@ public:
 		} else
 			return false;
 	}
-	bool join_game(shared_ptr<Game> g) {
+	bool Player::join_game(shared_ptr<Game> g) {
 		string tmpName = g->get.name();
 		auto it = games.find(tmpName);
 		if(it == games.end()) {
 			games.insert({tmpName, g});
+			Game emag;
+			emag.add_player(const GameKey& gk, shared_ptr<Player> p);	//valjda?
 			return true;
 		}
 		return false;
