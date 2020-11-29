@@ -74,7 +74,23 @@ public:
     }
     return PlayerCounter;
 	}
-	shared_ptr<Player> play(size_t i);	//TODO
+	shared_ptr<Player> play(size_t i){
+		shared_ptr<Player> winner;
+		for(auto it : players) {
+			size_t it_mmr = it.get_mmr();
+			if(it != i && it_mmr < i.get_mmr()) {
+				mmr = 1*change(false);
+			}
+			if(it != i && it_mmr > i.get_mmr()) {
+				mmr = 2*change(false);
+			}
+			if (it == i) {
+				mmr = change(true);
+				winner = players[i];
+			}
+		}
+		return winner;
+	}
 	virtual int change(bool) const = 0;
 	virtual ~Game() = default;
 
