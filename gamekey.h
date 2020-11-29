@@ -9,7 +9,7 @@ using namespace std;
 class Game;
 class GameKey{
 	GameKey() {}	//Private. Moze implementirano bit i u GameKey.cpp
-	friend bool Player::joing_game(shared_ptr<Game>);
+	friend bool Player::join_game(shared_ptr<Game>);
 	friend bool Player::leave_game(shared_ptr<Game>);
 
 };
