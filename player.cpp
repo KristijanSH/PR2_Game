@@ -40,7 +40,15 @@ public:
 		} else
 			return false;
 	}
-	bool join_game(shared_ptr<Game> g);
+	bool join_game(shared_ptr<Game> g) {
+		string tmpName = g->get.name();
+		auto it = games.find(tmpName);
+		if(it == games.end()) {
+			games.insert({tmpName, g});
+			return true;
+		}
+		return false;
+	}
 	bool leave_game(shared_ptr<Game> g);
 	vector<weak_ptr<Player>> invite_players(const vector<weak_ptr<Player>>& v);
 	bool close_game();
