@@ -54,7 +54,16 @@ public:
 		}
 		return false;
 	}
-	bool leave_game(shared_ptr<Game> g);
+	bool leave_game(shared_ptr<Game> g) {
+		string currentG = g.get_name();
+		if(games.find(currentG)) {
+			games.erase(currentG);
+			delete this->g;
+			return true;
+		} else
+			return false;
+
+	}
 	vector<weak_ptr<Player>> invite_players(const vector<weak_ptr<Player>>& v);
 	bool close_game();
 
