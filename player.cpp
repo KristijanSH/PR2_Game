@@ -23,8 +23,8 @@ public:
 	Player(string name, int mmr): name{name}, mmr{mmr} {};
 //	string get_name() const;
 //	int get_mmr() const;
-	shared_ptr<Game> get_hosted_game() const{
-		return shared_ptr<Game>
+	shared_ptr<Game> Player::get_hosted_game() const{
+		return this->hosted_game;
 	}
 	void Player::change_mmr(int n){
 		if(mmr < 0 || mmr > 9999) {
