@@ -94,11 +94,24 @@ public:
 	virtual int change(bool) const = 0;
 	virtual ~Game() = default;
 
-	virtual ostream& print(ostream& o) const; //[name, host->name,host->mmr]   || {[Player_name,Player_mmr], [Player_name,Player_mmr],...}
+	/*virtual*/ ostream& Game::print(ostream& o) const {	//[name, host->name,host->mmr]   || {[Player_name,Player_mmr], [Player_name,Player_mmr],...}
+		o << '{' << name << ', ' << host->get_name() << ', ' << host->get_mmr() <<
+		bool first = true;
+		for(auto it = this->players.begin(); it != this->players.end(); it++) {
+			if (first)
+				first = false;
+			else
+				o << ', ';
+			o << '[' << it->first << ', ' << it ->second->get_mmr() << '], ';
+		}
+		o << '}';
+		return o;
+	} 
 
 	//TODO:
-	operator<<();	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
-
+	ostream& operator<<(ostream& o, const Game& g) {	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
+		return g.print(o);
+	}	
 	//Hinweis: Um shared_pointer vom this-Objekt zu erzeugen, muss die Klasse Game public von enable_shared_from_this<Game> erben!
 
 };
