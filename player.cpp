@@ -34,11 +34,14 @@ public:
 	}
 	bool Player::host_game(string s, Mode m) {
 		if(s.empty()) throw new runtime_error("empty string!");
-		if(hosted_game == nullptr) {	//labavo je ovo kume al mozda proradi
-			m->hosted_game;
-			return true;
-		} else
-			return false;
+		if(hosted_game) return false;
+		
+		if(m == Mode::Ranked) {
+			this->hosted_game = make_shared<RGame>(s, shared_from_this());
+		} else if(m == Mode:Unranked) {
+			this->hosted_game = make_shared<UGame>(s, shared_from_this());
+		}	
+		return true;
 	}
 	bool Player::join_game(shared_ptr<Game> g) {
 		string tmpName = g->get.name();
