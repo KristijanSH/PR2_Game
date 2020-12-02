@@ -43,6 +43,15 @@ public:
 			return false;
 		  }
 		return checkDelete;  
+		/*
+bool Game::remove_player(const GameKey& gk, shared_ptr<Player> p){
+    if(players.count(p->get_name())){//überprüft ob Player in Game
+        players.erase(p->get_name());
+        return true;
+    }
+    return false;
+}
+		*/
 	}
 	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p) {
 		if((Player::get_name() != p.get_name()) && ((p.get_mmr() < host.get_mmr() * 0.10 ) || (p.get_mmr() > host.get_mmr() * 0.10 ))) {

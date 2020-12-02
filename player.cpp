@@ -54,7 +54,7 @@ public:
 		}
 		return false;
 	}
-	bool leave_game(shared_ptr<Game> g) {
+	bool Player::leave_game(shared_ptr<Game> g) {
 		string currentG = g.get_name();
 		if(games.find(currentG)) {
 			games.erase(currentG);
@@ -64,8 +64,17 @@ public:
 			return false;
 
 	}
-	vector<weak_ptr<Player>> invite_players(const vector<weak_ptr<Player>>& v);
-	bool close_game();
+	vector<weak_ptr<Player>> Player::invite_players(const vector<weak_ptr<Player>>& v) {
+
+		for(auto k : v) {
+
+		}
+	}
+	bool Player::close_game(){
+
+		hosted_game.reset();
+
+	}
 
 	ostream& print(ostream& o) const;	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game,name, ...}]
 	operator<<;	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
