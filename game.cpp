@@ -61,6 +61,26 @@ bool Game::remove_player(const GameKey& gk, shared_ptr<Player> p){
 			return false;
 	}
 
+/*	ne radi al mozda pomogne
+bool Game :: add_player(const GameKey& gk, shared_ptr<Player> p)
+{
+    // von map alle namen durchzugehen und finden obs gleiche name gibt
+    string pn = p->get_name();
+    auto it = find_if (players.begin(), players.end(), [&pn](const pair <string, shared_ptr<Player>>& g)
+        {
+            
+            return pn == g.first;
+        });
+
+    if (it != players.end()) return false;
+
+    if (is_allowed(p->get_mmr()))
+    {
+        players.emplace(p->get_mmr(), p);
+        return true;
+    }
+    }
+*/
 	shared_ptr<Player> best_player() const{
 		shared_ptr<Player> mwp;
 		if(players.empty()) throw new runtime_error("Players empty!");

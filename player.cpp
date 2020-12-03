@@ -65,10 +65,21 @@ public:
 
 	}
 	vector<weak_ptr<Player>> Player::invite_players(const vector<weak_ptr<Player>>& v) {
+		vector<weak_ptr<Player>> inviteListe;
 
-		for(auto k : v) {
-
+		for(auto cont& nesto : v) {
+			bool isok = false;
+			if(nesto.lock() && this->get_hosted_game().get()) {
+				if(nesto.lock()->join_game(this->get_hosted_game())) {
+					isok = true;
+					this->games.insert({this->get_name(), this->get_hosted_game()});
+				}
+			}
+		if(!nesto.lock() || !isok)
+			inviteListe.push_back(nesto);	
 		}
+
+		return inviteListe;
 	}
 	bool Player::close_game(){
 
@@ -76,7 +87,21 @@ public:
 
 	}
 
-	ostream& print(ostream& o) const;	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game,name, ...}]
+
+	ostream& Player::print(ostream& o) const{	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game_game, ...}]
+	o << '[' << name << ", " << mmr << ", " << "hosts: " << hosted_game.get_name();
+	bool first = true;
+	for(auto it = this->players.begin(); it != this->players.end(), it++) {
+		if (first)
+			first = false;
+		else
+			o << ":";
+		o << '{' << it->first << "} ";
+	}
+		o << ']';
+		return o;
+	}
+	
 	operator<<;	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
 
 	
