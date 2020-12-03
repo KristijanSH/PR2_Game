@@ -15,10 +15,10 @@ class Game;
 enum class Mode{Ranked,Unranked};
 
 class Player:public enable_shared_from_this<Player>{	//HINWEIS: Um shared_pointer vom this-Objekt zu ergeugen, muss die Klasse Player public von Enable_shared_from_this<Player> erben
-	string name;
-	int mmr;
-	shared_ptr<Game> hosted_game;
-	map<string, weak_ptr<Game>> games; //Map von Spielen an denen Player teilnimmt
+//	string name;
+//	int mmr;
+//	shared_ptr<Game> hosted_game;
+//	map<string, weak_ptr<Game>> games; //Map von Spielen an denen Player teilnimmt
 public:
 	Player(string name, int mmr): name{name}, mmr{mmr} {};
 //	string get_name() const;
@@ -43,6 +43,33 @@ public:
 		}	
 		return true;
 	}
+	/*
+bool Player::host_game(string s, Mode m)
+{
+    
+    if (s.empty()) throw runtime_error("empty name");
+    if (hosted_game == nullptr)
+    {
+        
+        //shared_ptr<Player> p{ make_shared<Player>(this) };
+    
+        if (m == Mode::Ranked)
+        {
+            RGame rg(s, shared_from_this());
+            hosted_game = make_shared<RGame>(rg);
+        }
+        else
+        {
+            UGame rg(s, shared_from_this());
+            hosted_game = make_shared<UGame>(rg);
+        }
+        return true;
+        }
+    else return false;
+     
+
+}
+	*/
 	bool Player::join_game(shared_ptr<Game> g) {
 		string tmpName = g->get.name();
 		auto it = games.find(tmpName);

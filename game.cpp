@@ -9,32 +9,28 @@
 #include<vector>
 #include<map>
 
-class Game:public enable_shared_from_this<Game>{
-string name;
-shared_ptr<Player> host;
-map<string, shared_ptr<Player>> players;
+using namespace std;
 
-public:
-	Game::Game(string name, shared_ptr<Player> host):name{name},{
+	Game::Game(string name, shared_ptr<Player> host):name{name} {
 		if(name.empty() || name.length() == 0) { throw new runtime_error("Name darf nicht leer sein!");}
 		if(host == nullptr) {throw new runtime_error("Host darf nicht nullptr sein!");}
 	}	
-	string get_name() const {
-		return name;	//ili je return this->name; ? posto pise liefert den namen des this-objekts?
+	string Game::get_name() const {
+		return this->name;	//ili je return this->name; ? posto pise liefert den namen des this-objekts?
 	}
 	bool Game::is_allowed(int n) const {		// poseri mi se u usta ako ovo bude radilo
 		//double hostMMR = host->mmr;
-		auto 90perc = mmr * 90 / 100;	//alt 1
-		auto 110perc = mmr * 110 / 100;	//alt 1
-		if( n > mmr * 0.90 || n < mmr * 1.10){		//alt 1:	if(n > 90perc || n < 110perc)	//alt 2: sa float if( n > mmr * 9.0/10 || n < mmr * 11.0/10) 
+		//auto perc90 = mmr * 90 / 100;	//alt 1
+		//auto perc110 = mmr * 110 / 100;	//alt 1
+		if( n > host->get_mmr() * 0.90 || n < host->get_mmr() * 1.10){		//alt 1:	if(n > 90perc || n < 110perc)	//alt 2: sa float if( n > mmr * 9.0/10 || n < mmr * 11.0/10) 
 			return true;
 		} else
 			return false;
 	}
-	bool Game::remove_player(const GameKey$ gk, shared_ptr<Player> p){
+	bool Game::remove_player(const GameKey& gk, shared_ptr<Player> p){
 		bool checkDelete = false;
 		if(p != nullptr) {
-			delete p;
+			p = nullptr;
 			checkDelete = true;
 		}
 		if (checkDelete == true){
@@ -43,6 +39,10 @@ public:
 			return false;
 		  }
 		return checkDelete;  
+    
+    
+    
+    
 		/*
 bool Game::remove_player(const GameKey& gk, shared_ptr<Player> p){
     if(players.count(p->get_name())){//überprüft ob Player in Game
@@ -53,47 +53,43 @@ bool Game::remove_player(const GameKey& gk, shared_ptr<Player> p){
 }
 		*/
 	}
-	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p) {
+/*	bool Game::add_player(const GameKey& gk, shared_ptr<Player> p) {
 		if((Player::get_name() != p.get_name()) && ((p.get_mmr() < host.get_mmr() * 0.10 ) || (p.get_mmr() > host.get_mmr() * 0.10 ))) {
 			players.insert({p->get_name(), p});
 			return true;
 		} else
 			return false;
 	}
-
-/*	ne radi al mozda pomogne
+*/
+//	ne radi al mozda pomogne
 bool Game :: add_player(const GameKey& gk, shared_ptr<Player> p)
 {
     // von map alle namen durchzugehen und finden obs gleiche name gibt
     string pn = p->get_name();
     auto it = find_if (players.begin(), players.end(), [&pn](const pair <string, shared_ptr<Player>>& g)
-        {
-            
+        {     
             return pn == g.first;
         });
-
     if (it != players.end()) return false;
 
     if (is_allowed(p->get_mmr()))
     {
-        players.emplace(p->get_mmr(), p);
+        players.emplace(p->get_name(), p);
         return true;
     }
-    }
-*/
-	shared_ptr<Player> best_player() const{
-		shared_ptr<Player> mwp;
-		if(players.empty()) throw new runtime_error("Players empty!");
-		else {
-			mwp = *max_element(players.begin(), players.end(), [=](auto p1, auto p2) {
-				return p1.get_mmr() < p2.get_mmr();
-			});
-		
-		return mwp;
-		}
-		if(players.count() > 1)
-			return players.first;
-	}						
+}
+shared_ptr<Player>  Game :: best_player() const
+
+{
+if (players.empty()) throw runtime_error("");
+
+	auto a = max_element (players.begin(), players.end(), [] (const pair <string, shared_ptr<Player>>& g, const pair <string, shared_ptr<Player>>& g1) {
+		return g.second->get_mmr() < g1.second->get_mmr();
+	});
+		auto p = a->second;
+	return p;
+}
+
 	size_t number_of_players() const{
 	size_t PlayerCounter = 0;
     for(auto i : players){
@@ -143,7 +139,7 @@ bool Game :: add_player(const GameKey& gk, shared_ptr<Player> p)
 	}	
 	//Hinweis: Um shared_pointer vom this-Objekt zu erzeugen, muss die Klasse Game public von enable_shared_from_this<Game> erben!
 
-};
+
 
 class RGame:public Game{
 public:

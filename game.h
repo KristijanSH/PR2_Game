@@ -6,8 +6,10 @@
 #include<memory>
 #include<vector>
 #include<map>
+#include "player.h"
+#include "gamekey.h"
 
-
+using namespace std;
 
 class Game:public enable_shared_from_this<Game>{
 string name;
@@ -18,7 +20,7 @@ public:
 	Game(string name, shared_ptr<Player> host);	//TODO: Konstruktor
 	string get_name() const;
 	bool is_allowed(int n) const;
-	bool remove_player(const GameKey$ gk, shared_ptr<Player> p);
+	bool remove_player(const GameKey& gk, shared_ptr<Player> p);
 	bool add_player(const GameKey& gk, shared_ptr<Player> p);
 	shared_ptr<Player> best_player() const;
 	size_t number_of_players() const;
@@ -29,7 +31,7 @@ public:
 	virtual ostream& print(ostream& o) const; //[name, host->name,host->mmr]   || {[Player_name,Player_mmr], [Player_name,Player_mmr],...}
 
 	//TODO:
-	operator<<();	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
+	//operator<<();	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
 
 	//Hinweis: Um shared_pointer vom this-Objekt zu erzeugen, muss die Klasse Game public von enable_shared_from_this<Game> erben!
 
@@ -53,6 +55,5 @@ public:
 	}
  	ostream& print(ostream& o) const;	//Gibt das Objekt auf den ostream o aus; Format: Game->Print
 };
-
 
 #endif
