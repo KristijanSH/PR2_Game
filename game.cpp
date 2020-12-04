@@ -90,14 +90,8 @@ if (players.empty()) throw runtime_error("");
 	return p;
 }
 
-	size_t number_of_players() const{
-	size_t PlayerCounter = 0;
-    for(auto i : players){
-        if(!i.second.expired()){
-            PlayerCounter++;
-        }
-    }
-    return PlayerCounter;
+	size_t Game::number_of_players() const{
+    return players.size();
 	}
 	shared_ptr<Player> play(size_t i){
 		shared_ptr<Player> winner;
