@@ -93,6 +93,7 @@ if (players.empty()) throw runtime_error("");
 	size_t Game::number_of_players() const{
     return players.size();
 	}
+/*
 	shared_ptr<Player> Game::play(size_t i){
 		shared_ptr<Player> winner;
 		for(auto it : players) {
@@ -112,6 +113,29 @@ if (players.empty()) throw runtime_error("");
 		}
 		return winner;
 	}
+*/
+
+//	play v2
+shared_ptr<Player> Game :: play (size_t i) {
+ auto winner = this->players.begin();
+ 
+  for(size_t j = 0; j < i; j++)
+    winner++;
+  
+ int winner_mmr = winner->second.get()->get_mmr();
+	for(auto const& it : this->players) {
+   if(winner->first == it->first) continue;
+   if(it.second.get()->get_mmr() > winner_mmr) {
+    	it.second.get()->change_mmr(2*this->change(false)); 
+   } else {
+    	it.second->get()->change_mmr(this->change(false));	 	
+   	}
+  }  
+  winner->second.get()->change_mmr(this->change(false));
+  
+  return winner->second;
+}
+
 //	virtual int change(bool) const() = 0;
 //	virtual ~Game(){ // = default;
 //		delete[] players;
