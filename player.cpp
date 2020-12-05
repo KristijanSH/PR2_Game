@@ -131,7 +131,7 @@ if (findP != g->get_players().end()) return false;
 	vector<weak_ptr<Player>> Player::invite_players(const vector<weak_ptr<Player>>& v) {
 		vector<weak_ptr<Player>> inviteListe;
 
-		for(auto cont& nesto : v) {
+		for(auto const& nesto : v) {
 			bool isok = false;
 			if(nesto.lock() && this->get_hosted_game().get()) {
 				if(nesto.lock()->join_game(this->get_hosted_game())) {
@@ -153,20 +153,21 @@ if (findP != g->get_players().end()) return false;
 
 
 	ostream& Player::print(ostream& o) const{	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game_game, ...}]
-	o << '[' << name << ", " << mmr << ", " << "hosts: " << hosted_game.get_name();
-	bool first = true;
-	for(auto it = this->players.begin(); it != this->players.end(), it++) {
-		if (first)
-			first = false;
-		else
-			o << ":";
-		o << '{' << it->first << "} ";
-	}
-		o << ']';
-		return o;
+		bool first = false;
+    o << '[' << name << ", " << mmr << ", " << "hosts: " << hosted_game->get_name() << "games: {";
+	
+		for(auto& elem : games) {
+			if (first) o << ", ";
+			else
+        first = true;
+				o << elem.second.lock()->get_name();
+    }  
+		o << "}]";
+			return o;
 	}
 	
-	operator<<;	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
-
-	
+	ostream& operator<<(ostream& o, const Player& p) {	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
+//	if(hosted_game == nullptr) o << "nothing \n";
+    return p.print(o);
+  }
 
