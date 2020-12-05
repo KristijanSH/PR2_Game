@@ -123,12 +123,12 @@ shared_ptr<Player> Game :: play (size_t i) {
     winner++;
   
  int winner_mmr = winner->second.get()->get_mmr();
-	for(auto const& it : this->players) {
-   if(winner->first == it->first) continue;
-   if(it.second.get()->get_mmr() > winner_mmr) {
-    	it.second.get()->change_mmr(2*this->change(false)); 
+	for(auto const& a: this->players) {
+   if(winner->first == a.first) continue;
+   if(a.second.get()->get_mmr() > winner_mmr) {
+    	a.second.get()->change_mmr(2*this->change(false)); 
    } else {
-    	it.second->get()->change_mmr(this->change(false));	 	
+    	a.second.get()->change_mmr(this->change(false));	 	
    	}
   }  
   winner->second.get()->change_mmr(this->change(false));
