@@ -27,7 +27,7 @@ public:
 	shared_ptr<Player> play(size_t i);
 	virtual int change(bool) const = 0;
 	virtual ~Game() = default;
-
+  
 	virtual ostream& print(ostream& o) const; //[name, host->name,host->mmr]   || {[Player_name,Player_mmr], [Player_name,Player_mmr],...}
 
 	//TODO:
@@ -44,7 +44,7 @@ public:
 		if(x == true) return 5;
 			else return -5;
 	}
-	ostream& print(ostream o) const;	//Gibt das Objekt auf den ostream o aus; Format: Ranked Game: Game->Print
+	ostream& print(ostream& o) const;	//Gibt das Objekt auf den ostream o aus; Format: Ranked Game: Game->Print
 };
 
 class UGame:public Game {

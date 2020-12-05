@@ -93,37 +93,41 @@ if (players.empty()) throw runtime_error("");
 	size_t Game::number_of_players() const{
     return players.size();
 	}
-	shared_ptr<Player> play(size_t i){
+	shared_ptr<Player> Game::play(size_t i){
 		shared_ptr<Player> winner;
 		for(auto it : players) {
-			size_t it_mmr = it.get_mmr();
-			if(it != i && it_mmr < i.get_mmr()) {
+			auto mmr =  it.second->get_mmr();
+      size_t it_mmr  = it.second->get_mmr();
+			if(it_mmr != i && it_mmr < mmr) {
 				mmr = 1*change(false);
 			}
-			if(it != i && it_mmr > i.get_mmr()) {
+			if(it_mmr != i && it_mmr >  mmr) {
 				mmr = 2*change(false);
 			}
-			if (it == i) {
+			if (it.second->get_mmr() == i) {
 				mmr = change(true);
-				winner = players[i];
+        //this->hosted_game = make_shared<RGame>(s, shared_from_this());
+				winner = make_shared<Player>();
 			}
 		}
 		return winner;
 	}
-	virtual int change(bool) const = 0;
-	virtual ~Game() = default;
-
+//	virtual int change(bool) const() = 0;
+//	virtual ~Game(){ // = default;
+//		delete[] players;
+//  }  
+    
 	/*virtual*/ ostream& Game::print(ostream& o) const {	//[name, host->name,host->mmr]   || {[Player_name,Player_mmr], [Player_name,Player_mmr],...}
-		o << '{' << name << ', ' << host->get_name() << ', ' << host->get_mmr() <<
+		o << '[' << name << ", " << host->get_name() << ", " << host->get_mmr() << ", player: {";
 		bool first = true;
-		for(auto it = this->players.begin(); it != this->players.end(); it++) {
+		for(auto it = this->players.begin(); it != this->players.end(); ++it) {
 			if (first)
 				first = false;
 			else
-				o << ', ';
-			o << '[' << it->first << ', ' << it ->second->get_mmr() << '], ';
+				o << ", ";
+			o << '[' << it->second->get_name() << ", " << it ->second->get_mmr() << "], ";
 		}
-		o << '}';
+		o << "}]";
 		return o;
 	} 
 
@@ -133,23 +137,17 @@ if (players.empty()) throw runtime_error("");
 	}	
 	//Hinweis: Um shared_pointer vom this-Objekt zu erzeugen, muss die Klasse Game public von enable_shared_from_this<Game> erben!
 
+	//ovdje vjerojatno ne valja output, al barem nema errora
+	ostream& RGame::print(ostream& o) const{	//Gibt das Objekt auf den ostream o aus; Format: Ranked Game: Game->Print
+		Game::print(o);
+    o << "Ranked Game: " << get_name();
+    return o;
+  }  
 
 
-class RGame:public Game{
-public:
-	RGame(string, shared_ptr<Player>); //setzt Instanzvariablen durch Konstruktor des Basisklasse
-	int change(bool x) const {		// Liedert 5 falls x true ist, ansonsten -5
-		if(x == true) return 5;
-			else return -5;
-	}
-	ostream& print(ostream o) const;	//Gibt das Objekt auf den ostream o aus; Format: Ranked Game: Game->Print
-};
-
-class UGame:public Game {
-public:
-	UGame(string, shared_ptr<Player>); //Setzt instanzvariablen durch Konstruktor der Basisklasse
-	int change(bool) const {
-		return 0;
-	}
- 	ostream& print(ostream& o) const;	//Gibt das Objekt auf den ostream o aus; Format: Game->Print
-};
+ 	ostream& UGame::print(ostream& o) const {	//Gibt das Objekt auf den ostream o aus; Format: Game->Print
+		Game::print(o);
+    o << "Ranked Game: " << get_name();
+    return o;
+  }
+  
