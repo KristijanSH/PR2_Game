@@ -12,25 +12,23 @@ using namespace std;
 
 class Game;
 
-enum class Mode{Ranked,Unranked};
+//enum class Mode{Ranked,Unranked};
 
-class Player:public enable_shared_from_this<Player>{	//HINWEIS: Um shared_pointer vom this-Objekt zu ergeugen, muss die Klasse Player public von Enable_shared_from_this<Player> erben
+
 //	string name;
 //	int mmr;
 //	shared_ptr<Game> hosted_game;
 //	map<string, weak_ptr<Game>> games; //Map von Spielen an denen Player teilnimmt
-public:
-	Player(string name, int mmr): name{name}, mmr{mmr} {};
+//public:
+//	Player(string name, int mmr): name{name}, mmr{mmr} {};
 //	string get_name() const;
 //	int get_mmr() const;
 	shared_ptr<Game> Player::get_hosted_game() const{
 		return this->hosted_game;
 	}
 	void Player::change_mmr(int n){
-		if(mmr < 0 || mmr > 9999) {
-			return mmr;
-		} else
-			return mmr + n;
+		if(mmr > 0 || mmr < 9999) 
+			mmr += n;
 	}
 	bool Player::host_game(string s, Mode m) {
 		if(s.empty()) throw new runtime_error("empty string!");
@@ -38,7 +36,7 @@ public:
 		
 		if(m == Mode::Ranked) {
 			this->hosted_game = make_shared<RGame>(s, shared_from_this());
-		} else if(m == Mode:Unranked) {
+		} else if(m == Mode::Unranked) {
 			this->hosted_game = make_shared<UGame>(s, shared_from_this());
 		}	
 		return true;
@@ -70,6 +68,26 @@ bool Player::host_game(string s, Mode m)
 
 }
 	*/
+
+//	HOST_GAME V2
+/*
+bool Player::host_game(string s, Mode m)
+{
+  if (s.empty()) throw runtime_error("empty name");
+	if(this->hosted_game == nullptr) {
+  	switch (m) {
+    	case Mode::Ranked:
+      	hosted_game = make_shared<RGame>(s, shared_from_this());
+        return true;
+        
+      case Mode::Unranked:
+      	hosted_game = make_shared<UGame>(s, shared_from_this());
+        return true;
+    }
+  }
+  return false;
+}
+*/
 	bool Player::join_game(shared_ptr<Game> g) {
 		string tmpName = g->get.name();
 		auto it = games.find(tmpName);
@@ -132,4 +150,4 @@ bool Player::host_game(string s, Mode m)
 	operator<<;	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
 
 	
-}
+
