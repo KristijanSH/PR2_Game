@@ -37,12 +37,13 @@ public:
 	bool leave_game(shared_ptr<Game> g);
 	vector<weak_ptr<Player>> invite_players(const vector<weak_ptr<Player>>& v);
 	bool close_game();
+  ostream& print(ostream& o) const;	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game,name, ...}]
+};
 
-	ostream& print(ostream& o) const;	//Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game,name, ...}]
-	//ostream operator<<(ostream&, const Player&);	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
+	ostream& operator<<(ostream& o, const Player& p);	//If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
 
 	
-};
+
 
 
 

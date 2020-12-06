@@ -78,16 +78,25 @@ bool Game :: add_player(const GameKey& gk, shared_ptr<Player> p)
         return true;
     }
 }
-shared_ptr<Player>  Game :: best_player() const
+shared_ptr<Player>  Game :: best_player() const {
 
-{
-if (players.empty()) throw runtime_error("");
+  
+  if (players.empty()) throw runtime_error("");
 
 	auto a = max_element (players.begin(), players.end(), [] (const pair <string, shared_ptr<Player>>& g, const pair <string, shared_ptr<Player>>& g1) {
 		return g.second->get_mmr() < g1.second->get_mmr();
 	});
 		auto p = a->second;
 	return p;
+
+  /*
+  if (players.empty()) throw runtime_error("Eror");
+    auto it = max_element(this->players.begin(), this->players.end(),
+        [](const auto& p1, const auto& p2) 
+        {return p1.second->get_mmr() < p2.second->get_mmr(); });
+    return it->second;
+	*/
+
 }
 
 	size_t Game::number_of_players() const{
@@ -156,22 +165,24 @@ shared_ptr<Player> Game :: play (size_t i) {
 	} 
 
 	//TODO:
-	ostream& operator<<(ostream& o, const Game& g) {	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
-		return g.print(o);
-	}	
+
 	//Hinweis: Um shared_pointer vom this-Objekt zu erzeugen, muss die Klasse Game public von enable_shared_from_this<Game> erben!
 
 	//ovdje vjerojatno ne valja output, al barem nema errora
 	ostream& RGame::print(ostream& o) const{	//Gibt das Objekt auf den ostream o aus; Format: Ranked Game: Game->Print
 		Game::print(o);
-    o << "Ranked Game: " << get_name();
-    return o;
+    o << "Ranked Game: ";
+    return Game::print(o);
   }  
 
 
  	ostream& UGame::print(ostream& o) const {	//Gibt das Objekt auf den ostream o aus; Format: Game->Print
 		Game::print(o);
-    o << "Ranked Game: " << get_name();
-    return o;
+    o << "Unranked Game: ";
+    return Game::print(o);
   }
+
+	ostream& operator<<(ostream& o, const Game& g) {	//Global zu überladen;	bsp: [DotA 2, Juliane, 558, player: [Heinrich, 575], [Helmut, 582], [Juliane, 558]]
+		return g.print(o);
+	}	
   
