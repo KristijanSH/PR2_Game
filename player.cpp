@@ -30,17 +30,21 @@ class Game;
     if(mmr > 0 || mmr < 9999) 
       mmr += n;
   }
-  bool Player::host_game(string s, Mode m) {
-    if(s.empty()) throw new runtime_error("empty string!");
-    if(hosted_game) return false;
-    
-    if(m == Mode::Ranked) {
-      this->hosted_game = make_shared<RGame>(s, shared_from_this());
-    } else if(m == Mode::Unranked) {
-      this->hosted_game = make_shared<UGame>(s, shared_from_this());
-    } 
-    return true;
-  }
+ bool Player::host_game(std::string s, Mode m) {
+        if(s.empty()) throw std::runtime_error{"empty string"};
+        if(this->hosted_game == nullptr){
+        switch (m){
+            case Mode::Ranked:
+                hosted_game = std::make_shared<RGame>(s, shared_from_this());
+                return true;
+
+            case Mode::Unranked:
+                hosted_game = std::make_shared<UGame>(s, shared_from_this());
+                return true;
+                }
+        } return false; }
+
+
   /*
 bool Player::host_game(string s, Mode m)
 {
@@ -200,8 +204,12 @@ bool Player::close_game(){
 
   ostream& Player::print(ostream& o) const{ //Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game_game, ...}]
     bool first = false;
-    o << '[' << name << ", " << mmr << ", " << "hosts: " << hosted_game->get_name() << "games: {";
-  
+    o << '[' << name << ", " << mmr << ", " << "hosts: " ; //<< hosted_game->get_name() << "games: {";
+    if(hosted_game)
+      o << hosted_game->get_name() <<',';
+    else
+      o << "nothing,";
+    o << " games: {";
     for(auto& elem : games) {
       if (first) o << ", ";
       else
