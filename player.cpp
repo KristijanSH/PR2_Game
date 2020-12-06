@@ -89,22 +89,17 @@ bool Player::host_game(string s, Mode m)
 }
 */
 	bool Player::join_game(shared_ptr<Game> g) {
-/*		string tmpName = g->get_name();
-		auto it = games.find(tmpName);
-		if(it == games.end()) {
-			games.insert({tmpName, g});
-			Game emag;
-			emag.add_player(const GameKey& gk, shared_ptr<Player> p);	//valjda?
-			return true;
-		}
-		return false;
-*/    
-  /*
-  auto findP = find_if(g->get_players().begin(), g->get_players().end(), [&thisname](const pair<string, shared_ptr<Player>>& val) {
-        return val.second->get_name() == thisname;
+  string currentName = g->get_name(); 
+	const GameKey& gk {}; 
+  auto p = shared_from_this();
+
+  auto found = find_if(games.begin(), games.end(), [&currentName](const pair<string, shared_ptr<Player>>& coolObjekt) {
+        return coolObjekt.second->get_name() == currentName;
     });
-if (findP != g->get_players().end()) return false;
-  */
+	if (found != games.end()) return false;
+  else
+    g->add_player(gk, shared_from_this());
+  return true;
     
 	}
 	bool Player::leave_game(shared_ptr<Game> g) {
