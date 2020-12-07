@@ -23,6 +23,8 @@ class Game;
 //  Player(string name, int mmr): name{name}, mmr{mmr} {};
 //  string get_name() const;
 //  int get_mmr() const;
+
+
   shared_ptr<Game> Player::get_hosted_game() const{
     return this->hosted_game;
   }
@@ -45,138 +47,97 @@ class Game;
         } return false; }
 
 
-  /*
-bool Player::host_game(string s, Mode m)
-{
-    
-    if (s.empty()) throw runtime_error("empty name");
-    if (hosted_game == nullptr)
-    {
-        
-        //shared_ptr<Player> p{ make_shared<Player>(this) };
-    
-        if (m == Mode::Ranked)
-        {
-            RGame rg(s, shared_from_this());
-            hosted_game = make_shared<RGame>(rg);
-        }
-        else
-        {
-            UGame rg(s, shared_from_this());
-            hosted_game = make_shared<UGame>(rg);
-        }
-        return true;
-        }
-    else return false;
-     
 
-}
-  */
 
-//  HOST_GAME V2
-/*
-bool Player::host_game(string s, Mode m)
-{
-  if (s.empty()) throw runtime_error("empty name");
-  if(this->hosted_game == nullptr) {
-    switch (m) {
-      case Mode::Ranked:
-        hosted_game = make_shared<RGame>(s, shared_from_this());
-        return true;
-        
-      case Mode::Unranked:
-        hosted_game = make_shared<UGame>(s, shared_from_this());
-        return true;
+
+
+
+
+
+
+
+
+
+bool Player::join_game(std::shared_ptr<Game> g){
+  
+  GameKey gamekey;
+  
+  if(g->add_player(gamekey,shared_from_this())){
+    const auto [it, success] = games.insert_or_assign(g->get_name(), g);
+    if (!success && (*it).second.expired()){
+      games.at(g->get_name()) = g;
+      return true;
     }
+    return success;
   }
   return false;
 }
-*/
-  bool Player::join_game(shared_ptr<Game> g) {
-/*  string currentName = g->get_name(); 
-  const GameKey& gk {}; 
-  auto p = shared_from_this();
 
-  auto found = find_if(games.begin(), games.end(), [&currentName](const pair<string, shared_ptr<Player>>& coolObjekt) {
-        return coolObjekt.second->get_name() == currentName;
-    });
-  if (found != games.end()) return false;
-  else
-    g->add_player(gk, shared_from_this());
-  return true;
-*/
-    
-/*
-  if(g->remove_player(GameKey(), shared_from_this())){
-    g->add_player(GameKey(), shared_from_this());
-    if((games[g->get_name()]).expired()){
-      games.at(g->get_name()) = weak_ptr<Game>(g);
-    }
-    return false;
-  }
-  if(g->is_allowed(mmr)) {
-    g->add_player(GameKey(), shared_from_this());
-    games.insert({g->get_name(), weak_ptr<Game>(g)});
-    return true;
-  }
 
-*/
-  GameKey gk;  
-    if(g->add_player(gk, shared_from_this())) {
-      this->games.insert({g.get()->get_name(), g});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*bool Game::add_player(const GameKey& gk, shared_ptr<Player> p) {
+  if(is_allowed(p->get_mmr())) {
+    auto fPlayer = players.find(p->get_name());
+    if(fPlayer == players.end()) {
+      players.insert({p->get_name(), p});
       return true;
-    }  
-    return false;
-  }
-  bool Player::leave_game(shared_ptr<Game> g) {
-    // g aus der map loeschen, und auch this aus g.players loeschen
-    //remove_if bei games und dann bei players
-/*    string gn = g->get_name();
-    auto res = remove_if(games.begin(), games.end(), [&gn](const pair <string, weak_ptr<Game>>& ga)
-        {
-            return gn == ga.first;
-        });
-
-    if (res == games.end()) return false;
-    games.erase(res, games.end());
-    auto p = shared_from_this();
-    GameKey gk;
-    bool pl = g->remove_player(gk, p);
-    
-    if (pl) return true;
-    
-    return false;
+    }
+  }  
+  return false;
+}*/
+/*
+bool Player::join_game(std::shared_ptr<Game> g){
+        if(games.count(g->get_name()) <=0 && g->is_allowed(this->get_mmr())){
+            GameKey gk;
+            g->add_player(gk,shared_from_this());
+            std::weak_ptr<Game> game {g};
+            games.insert({(g->get_name()), game});
+            return true;
+        }
+             else if(games.count(g->get_name()) && games.at(g->get_name()).expired() && g->is_allowed(this->get_mmr())){
+          GameKey gk;
+            g->add_player(gk,shared_from_this());
+            std::weak_ptr<Game> game {g};
+            games.at(g->get_name())= game;
+            return true;
+        }
+        return false;}
 */
-    GameKey gk; 
-    bool removed;
-  //  if(g->add_player(gk, shared_from_this())) {
-    //  this->games.erase({g.get()->get_name(), shared_from_this()});
-    g.reset();  
-    removed = true;
-  //  }  
+
+  bool Player::leave_game(shared_ptr<Game> g) {
+    GameKey gamekey; 
+    bool removed = false;
+    
+    if(g->remove_player(gamekey, shared_from_this()) && this->games.erase({g->get_name()})){
+    
+      removed = true;
+    }
+    
    if(removed)
      return true;
    else
      return false;
-    
   }
 
   vector<weak_ptr<Player>> Player::invite_players(const vector<weak_ptr<Player>>& v) {
     vector<weak_ptr<Player>> inviteListe;
-/*
-    for(auto const& nesto : v) {
-      bool isok = false;
-      if(nesto.lock() && this->get_hosted_game().get()) {
-        if(nesto.lock()->join_game(this->get_hosted_game())) {
-          isok = true;
-          this->games.insert({this->get_name(), this->get_hosted_game()});
-        }
-      }
-    if(!nesto.lock() || !isok)
-      inviteListe.push_back(nesto); 
-    }
-    return inviteListe;
-*/
+    
     for(auto& elem : v) {
     bool isOK = false;
       if(elem.expired()) isOK = true;
@@ -195,15 +156,46 @@ bool Player::host_game(string s, Mode m)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 bool Player::close_game(){
+    if(get_hosted_game()!=nullptr) {
+      hosted_game = nullptr;
+        return true;}
+    return false;}
 
-    hosted_game.reset();
 
-  }
+
+
+
+
+
+
+
+
+
+
+
 
 
   ostream& Player::print(ostream& o) const{ //Format: [name, mmr, hosts: hosted_game_name, games: {Game_name, Game_game, ...}]
-    bool first = false;
+ /*   bool first = false;
     o << '[' << name << ", " << mmr << ", " << "hosts: " ; //<< hosted_game->get_name() << "games: {";
     if(hosted_game)
       o << hosted_game->get_name() <<',';
@@ -218,6 +210,30 @@ bool Player::close_game(){
     }  
     o << "}]";
       return o;
+  */
+    o << '[' << name << ", " << this->get_mmr() << ", " << "hosts: " ; 
+    if(hosted_game == nullptr)
+      o << "nothing";
+    else
+      o << hosted_game->get_name();
+    o << ", games: {";
+    
+    bool first = true;
+    for(const auto& a : games) {
+     if(!a.second.expired()) {
+      if (first) {
+       o << a.first;
+        first = false;
+      }
+       else {
+          o << ", " << a.first; 
+       }
+     }
+      
+    }  
+    o << "}]";
+    return o;
+  
   }
   
   ostream& operator<<(ostream& o, const Player& p) {  //If hosted_game.empty() soll "nothing" ausgegeben werden. Bsp: [Heinrich, 20, hosts: nothing, games{Sims 4, Sims3, Doom}]
